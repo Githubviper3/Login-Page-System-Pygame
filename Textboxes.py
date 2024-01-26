@@ -111,7 +111,7 @@ class InputBox:
 
    def validation(self):
        if self.private:
-           return paswordcheck(self.savetext)
+           return not paswordcheck(self.savetext)[0]
        else:
            if self.savetext == "" and len(self.savetext) < 6:
                return True
