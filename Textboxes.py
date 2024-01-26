@@ -5,7 +5,6 @@ from Colorlist import red as alertcolor
 from Validation import paswordcheck
 import string
 
-# keep asterix font different to label font
 class InputBox:
    def __init__(self,label,private, xpos, ypos, width, height):
        self.rect = pygame.Rect(xpos, ypos, width, height)
@@ -19,12 +18,10 @@ class InputBox:
        self.active = False
        self.border = 2
        self.private = private
-       self.PasswordFONT = pygame.font.Font(None, 32)
        self.label = label
        self.label_surface = self.FONT.render(self.label, True, "#000000")
        self.alert = False
-       self.Error = False
-       self.alertmsg = ""
+       self.checktext = False
 
 
    def border_change(self):
@@ -34,13 +31,10 @@ class InputBox:
        elif self.alert:
            self.border = 1
            self.color = alertcolor
-       elif self.Error:
-           self.border = 1
-           self.color = alertcolor
-       else:
+       elif self.active == False:
            self.border = 1
            self.color = passive
-           self.label_surface = self.FONT.render(self.label, True, "#000000")
+
 
 
 
@@ -81,18 +75,21 @@ class InputBox:
            self.savetext = self.savetext[:-1]
 
 
+
+
+
+
+
+
+
+
    def update(self,screen):
        self.border_change()
-       if self.alert:
-           self.label_surface = self.FONT.render(paswordcheck(self.savetext)[1], True, alercolor)
-       elif self.Error:
-           self.label_surface = self.FONT.render(self.alertmsg, True, alertcolor)
-       screen.blit(self.label_surface, (self.rect.x, self.rect.y - 15))
        self.rect.w = max(self.width, self.txt_surface.get_width() + 10)
        #label
        screen.blit(self.label_surface, (self.rect.x, self.rect.y - 15))
        if self.private:
-           self.txt_surface = self.PasswordFONT.render(self.showtext, True, "#000000")
+           self.FONT = pygame.font.Font(None, 32)
            screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y+5))
        else:
            screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 3))
@@ -114,7 +111,7 @@ class InputBox:
 
    def validation(self):
        if self.private:
-           return not paswordcheck(self.savetext)[0]
+           return paswordcheck(self.savetext)
        else:
            if self.savetext == "" and len(self.savetext) < 6:
                return True
@@ -122,8 +119,9 @@ class InputBox:
                return False
 
 
+
+
    def check_and_reset_submit_button(self, button):
        if self.savetext != "":
            button.isClicked = False
            self.alert = False
-           self.Error = False
