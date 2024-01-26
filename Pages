@@ -25,26 +25,18 @@ class LoginPage:
       userUname = self.Username.savetext
       userPword = self.Password.savetext
       for box in self.Textboxes:
-          box.check_and_reset_submit_button(self.Submit)
-      if button.isClicked and userUname != "" or userPword != "":
+          if button.isClicked:
+              box.alert = box.validation()
+      if button.isClicked and self.Username.alert == False and self.Password.alert == False:
           if UsernameFind(userUname):
               if PasswordFind(userPword):
                   self.next = "Game"
               else:
-                  self.Password.Error = True
-                  self.Password.alertmsg = "Not Recognized"
+                  self.Password.savetext = ""
+                  self.Password.showtext = ""
+                  self.Password.alert = True
           else:
-              self.Password.alert = self.Password.validtion
-              if not self.Password.alert:
-                self.next = "Register"
-      else:
-          if userPword == "":
-              self.Password.Error = True
-              self.Password.alertmsg = "Empty"
-          if userUname == "":
-              self.Username.Error = True
-              self.Username.alertmsg = "Empty"
-
+              self.next = "Register"
 
 
   def Eventsmanager(self, playeraction):
@@ -63,7 +55,8 @@ class LoginPage:
       pygame.draw.rect(DisplaySurf, (0, 0, 0), self.Menu_bar, 1, 2, 25, 25, 25, 25)
       self.Submithandler(self.Submit)
       self.Quithandler(self.Quit)
-      self.Quit.rect.center = self.Submit.rect.centerx + self.Submit.rect[2] + 20,self.Submit.rect.centery
+      self.Quit.rect.centery = self.Submit.rect.centery
+      self.Quit.rect.centerx = self.Submit.rect.centerx + self.Submit.rect[2] + 20
       self.Submit.draw(DisplaySurf)
       self.Quit.draw(DisplaySurf)
       for box in self.Textboxes:
@@ -102,10 +95,8 @@ class RegisterPage:
           Insert(text)
           self.next = "Game"
       else:
-          self.Password.alert
-          self.Confirmbox.alert
+          self.Confirmbox.alert = True
           self.Confirmbox.check_and_reset_submit_button(self.ConfirmButton)
-
 
 
 
@@ -130,7 +121,8 @@ class RegisterPage:
       self.ConfirmHandler(self.ConfirmButton)
       self.Quithandler(self.Quit)
       self.ConfirmButton.draw(DisplaySurf)
-      self.Quit.rect.center = self.ConfirmButton.rect.centerx + self.ConfirmButton.rect[2] + 20,self.ConfirmButton.rect.centery
+      self.Quit.rect.centery = self.ConfirmButton.rect.centery
+      self.Quit.rect.centerx = self.ConfirmButton.rect.centerx + self.ConfirmButton.rect[2] + 20
       self.Quit.draw(DisplaySurf)
       for box in self.Textboxes:
           box.update(DisplaySurf)
@@ -169,7 +161,6 @@ class GamePage:
       DisplaySurf.blit(self.Title, self.Title_rect)
       pygame.draw.rect(DisplaySurf, (54, 34, 32), self.Menu_bar,2, 0, 25, 25, 25, 25)
       self.Quithandler(self.Quit)
-      self.Quit.rect.center = self.Quit.defaultcenter
       self.Quit.draw(DisplaySurf)
       for Button in self.Buttons:
           Button.draw(DisplaySurf)
